@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "BackupManager": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}
