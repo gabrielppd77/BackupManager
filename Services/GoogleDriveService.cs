@@ -23,7 +23,7 @@ public class GoogleDriveService
         _appConfig = appConfigOptions.Value;
 
         var credential = CredentialFactory
-            .FromJson(_googleDrive.ServiceAccountJson, JsonCredentialParameters.ServiceAccountCredentialType)
+            .FromFile(_googleDrive.ServiceAccountFilePath, JsonCredentialParameters.ServiceAccountCredentialType)
             .CreateScoped(DriveService.ScopeConstants.DriveFile);
 
         _driveService = new DriveService(new BaseClientService.Initializer
