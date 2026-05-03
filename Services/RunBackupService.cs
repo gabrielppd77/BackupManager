@@ -14,7 +14,6 @@ public class RunBackupService
 
     private readonly string _mainFolder;
     private readonly string _backupsFolder;
-    private readonly string _zipPath;
 
     public RunBackupService(
         ILogger<RunBackupService> logger,
@@ -27,11 +26,11 @@ public class RunBackupService
         _googleDriveService = googleDriveService;
         _mainFolder = Path.Combine(Path.GetTempPath(), "backup-service");
         _backupsFolder = Path.Combine(_mainFolder, "backups");
-        _zipPath = Path.Combine(_mainFolder, $"backup_{DateTime.Now:yyyyMMdd_HHmmss}.zip");
     }
 
     public async Task RunAsync()
     {
+
         var databases = await ReadDatabases();
 
         if (Directory.Exists(_mainFolder))
@@ -47,14 +46,16 @@ public class RunBackupService
 
         _logger.LogInformation($"Start compression - {DateTimeOffset.Now}");
 
+        var zipPath = Path.Combine(_mainFolder, $"backup_{DateTime.Now:yyyyMMdd_HHmmss}.zip");
+
         ZipFile.CreateFromDirectory(
             _backupsFolder,
-            _zipPath
+            zipPath
         );
 
         _logger.LogInformation($"Finish compression - {DateTimeOffset.Now}");
 
-        await _googleDriveService.UploadFile(_zipPath);
+        await _googleDriveService.UploadFile(zipPath);
 
         await _googleDriveService.RemoveOldFiles();
 
